@@ -5,34 +5,42 @@ module Vigenere
 ) where
 
 import Data.Char
-import Caesar (shiftChar)
+import Caesar
 
 keyShift :: Char -> Int
-keyShift ch =
-    ord (toUpper ch) - ord 'A'
+keyShift c =
+    ord (toUpper c) - ord 'A'
 
 cleanKey :: String -> String
 cleanKey =
     filter isAlpha
 
-extendKey :: String -> String -> String
-extendKey key text =
-    take (length text) (cycle key)
-
 encryptVigenere :: String -> String -> String
 encryptVigenere key text =
-    zipWith encryptChar text (extendKey (cleanKey key) text)
+    process text (cycle (cleanKey key))
+  where
+    process [] _ = []
+
+    process (x:xs) ks
+
+        | isAlpha x =
+            let k = head ks
+            in shiftChar (keyShift k) x : process xs (tail ks)
+
+        | otherwise =
+            x : process xs ks
 
 decryptVigenere :: String -> String -> String
 decryptVigenere key text =
-    zipWith decryptChar text (extendKey (cleanKey key) text)
+    process text (cycle (cleanKey key))
+  where
+    process [] _ = []
 
-encryptChar :: Char -> Char -> Char
-encryptChar textChar keyChar
-    | isAlpha textChar = shiftChar (keyShift keyChar) textChar
-    | otherwise = textChar
+    process (x:xs) ks
 
-decryptChar :: Char -> Char -> Char
-decryptChar textChar keyChar
-    | isAlpha textChar = shiftChar (-keyShift keyChar) textChar
-    | otherwise = textChar
+        | isAlpha x =
+            let k = head ks
+            in shiftChar (-keyShift k) x : process xs (tail ks)
+
+        | otherwise =
+            x : process xs ks

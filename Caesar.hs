@@ -7,28 +7,21 @@ module Caesar
 
 import Data.Char
 
-shiftLower :: Int -> Char -> Char
-shiftLower key ch =
-    chr (((ord ch - ord 'a' + key) `mod` 26) + ord 'a')
-
-shiftUpper :: Int -> Char -> Char
-shiftUpper key ch =
-    chr (((ord ch - ord 'A' + key) `mod` 26) + ord 'A')
-
 shiftChar :: Int -> Char -> Char
 shiftChar key ch
-    | isLower ch = shiftLower key ch
-    | isUpper ch = shiftUpper key ch
-    | otherwise = ch
+    | isLower ch =
+        chr (((ord ch - ord 'a' + key) `mod` 26) + ord 'a')
 
-shiftText :: Int -> String -> String
-shiftText key =
-    map (shiftChar key)
+    | isUpper ch =
+        chr (((ord ch - ord 'A' + key) `mod` 26) + ord 'A')
+
+    | otherwise =
+        ch
 
 encryptCaesar :: Int -> String -> String
 encryptCaesar key =
-    shiftText key
+    map (shiftChar key)
 
 decryptCaesar :: Int -> String -> String
 decryptCaesar key =
-    shiftText (-key)
+    map (shiftChar (-key))
