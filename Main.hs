@@ -1,41 +1,61 @@
 module Main where
 
 import Caesar
+import Vigenere
 
 main :: IO ()
 main = do
-    putStrLn "===== Caesar Cipher ====="
-
-    putStrLn "1. Encrypt"
-    putStrLn "2. Decrypt"
+    putStrLn "===== Simple Cryptography ====="
+    putStrLn "1. Caesar Encrypt"
+    putStrLn "2. Caesar Decrypt"
+    putStrLn "3. Vigenere Encrypt"
+    putStrLn "4. Vigenere Decrypt"
 
     choice <- getLine
 
-    if choice == "1"
-    then do
-        putStrLn "Enter key:"
-        keyInput <- getLine
+    case choice of
 
-        putStrLn "Enter plaintext:"
-        text <- getLine
+        "1" -> do
+            putStrLn "Enter key:"
+            keyInput <- getLine
 
-        let key = read keyInput :: Int
+            putStrLn "Enter plaintext:"
+            text <- getLine
 
-        putStrLn "\nCiphertext:"
-        putStrLn (encryptCaesar key text)
+            let key = read keyInput :: Int
+            putStrLn (encryptCaesar key text)
 
-    else if choice == "2"
-    then do
-        putStrLn "Enter key:"
-        keyInput <- getLine
+        "2" -> do
+            putStrLn "Enter key:"
+            keyInput <- getLine
 
-        putStrLn "Enter ciphertext:"
-        text <- getLine
+            putStrLn "Enter ciphertext:"
+            text <- getLine
 
-        let key = read keyInput :: Int
+            let key = read keyInput :: Int
+            putStrLn (decryptCaesar key text)
 
-        putStrLn "\nPlaintext:"
-        putStrLn (decryptCaesar key text)
+        "3" -> do
+            putStrLn "Enter keyword:"
+            key <- getLine
 
-    else
-        putStrLn "Invalid choice."
+            if null (filter (`elem` ['A'..'Z'] ++ ['a'..'z']) key)
+            then putStrLn "Keyword must contain letters."
+            else do
+                putStrLn "Enter plaintext:"
+                text <- getLine
+                putStrLn (encryptVigenere key text)
+
+        "4" -> do
+            putStrLn "Enter keyword:"
+            key <- getLine
+
+            if null (filter (`elem` ['A'..'Z'] ++ ['a'..'z']) key)
+            then putStrLn "Keyword must contain letters."
+            else do
+                putStrLn "Enter ciphertext:"
+                text <- getLine
+                putStrLn (decryptVigenere key text)
+
+        _ ->
+            putStrLn "Invalid option."

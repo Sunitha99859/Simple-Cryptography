@@ -1,7 +1,8 @@
 module Caesar
 (
     encryptCaesar,
-    decryptCaesar
+    decryptCaesar,
+    shiftChar
 ) where
 
 import Data.Char
@@ -21,13 +22,13 @@ shiftChar key ch
     | otherwise = ch
 
 shiftText :: Int -> String -> String
-shiftText key text =
-    map (shiftChar key) text
+shiftText key =
+    map (shiftChar key)
 
 encryptCaesar :: Int -> String -> String
-encryptCaesar key text =
-    shiftText key text
+encryptCaesar key =
+    shiftText key
 
 decryptCaesar :: Int -> String -> String
-decryptCaesar key text =
-    shiftText (-key) text
+decryptCaesar key =
+    shiftText (-key)
